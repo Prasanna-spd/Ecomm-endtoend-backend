@@ -47,7 +47,7 @@ server.use(
 server.use(passport.authenticate("session"));
 server.use(
   cors({
-    origin: 'http://localhost:3000', // Replace with your frontend URL
+    origin: 'https://ecomm-endtoend-bea76bdrh-prasannaspds-projects.vercel.app', // Replace with your frontend URL
     credentials: true,
     exposedHeaders: ["X-Total-Count"],
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
@@ -157,8 +157,8 @@ server.post("/create-checkout-session", async (req, res) => {
     payment_method_types:["card"],
     line_items:lineItems,
     mode:"payment",
-    success_url:`http://localhost:3000/order-success/${currentOrder.id}`,
-    cancel_url:"http://localhost:3000/",
+    success_url:`https://ecomm-endtoend-bea76bdrh-prasannaspds-projects.vercel.app/${currentOrder.id}`,
+    cancel_url:"https://ecomm-endtoend-bea76bdrh-prasannaspds-projects.vercel.app/",
 });
 
 res.json({id:session.id})
