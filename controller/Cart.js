@@ -12,13 +12,13 @@ exports.fetchCartByUser = async (req, res) => {
 };
 
 exports.addToCart = async (req, res) => {
-  console.log(req.body,"this comes from frontend cart")
+  // console.log(req.body,"this comes from frontend cart")
   const {id} = req.user;
   const cart = new Cart({...req.body,user:id});
   try {
     const doc = await cart.save();
     const result = await doc.populate('product');
-    console.log(result,"this is populate result")
+    // console.log(result,"this is populate result")
     res.status(201).json(result);
   } catch (err) {
     res.status(400).json(err);

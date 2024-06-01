@@ -14,6 +14,6 @@ exports.sanitizeUser = (user) => {
       token = req.cookies['jwt'];
     }
     //TODO : this is temporary token for testing without cookie
-    // token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NTJiOTA2ZGU3ZjU3Y2MxOGZhMzQyYiIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzE2Njk3MzUwfQ.t80oz3raL8NRSXqoPCHHIDmOVVWJDRMZoCoQbPXur-o"
+    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NTgzNjg2NzYxZmE0MWQ1YThjYzA1NyIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzE3MDU3MTU4fQ.ipjgfJbVuE4NhQuF-A7B7hZcEubetq37r84taJtA44A"
   return token;
   };

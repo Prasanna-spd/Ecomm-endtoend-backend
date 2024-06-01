@@ -12,11 +12,11 @@ exports.fetchOrdersByUser = async (req, res) => {
   };
   
   exports.createOrder = async (req, res) => {
-    console.log(req.body,"this is from the body")
+    // console.log(req.body,"this is from the body")
     const order = new Order(req.body);
     try {
       const doc = await order.save();
-      console.log(doc,"this is the new order")
+      // console.log(doc,"this is the new order")
       res.status(201).json(doc);
     } catch (err) {
       res.status(400).json(err);

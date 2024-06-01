@@ -35,7 +35,7 @@ opts.secretOrKey = process.env.JWT_SECRET_KEY; // TODO: should not be in code;
 //middlewares
 server.use(bodyParser.json());
 server.use(express.raw({type: 'application/json'}));
-server.use(express.static(path.resolve(__dirname,'build')));
+// server.use(express.static(path.resolve(__dirname,'build')));
 server.use(cookieParser());
 server.use(
   session({
@@ -50,6 +50,8 @@ server.use(
     origin: 'http://localhost:3000', // Replace with your frontend URL
     credentials: true,
     exposedHeaders: ["X-Total-Count"],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
   })
 );
 server.use(express.json()); // to parse req.body
@@ -133,23 +135,51 @@ passport.deserializeUser(function (user, cb) {
 
 // Stripe payment configuration ---------------------------------------
 
-server.post("/create-payment-intent", async (req, res) => {
-  const { totalAmount } = req.body;
+server.post("/create-checkout-session", async (req, res) => {
+  const  {currentOrder, customerName, customerAddress}  = req.body;
+
+  console.log(currentOrder, customerName, customerAddress,"this is the body")
+
+  const lineItems = currentOrder.items.map((item) => ({
+    price_data: {
+      currency: "INR",
+      product_data: {
+        name: item.product.title,
+      },
+      unit_amount: item.product.price * 100,
+    },
+    quantity: item.quantity,
+  }));
+
+
+
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types:["card"],
+    line_items:lineItems,
+    mode:"payment",
+    success_url:`http://localhost:3000/order-success/${currentOrder.id}`,
+    cancel_url:"http://localhost:3000/",
+});
+
+res.json({id:session.id})
 
   // Create a PaymentIntent with the order amount and currency
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: totalAmount*100, // for decimal compensation
-    currency: "inr",
-    automatic_payment_methods: {
-      enabled: true,
-    },
-  });
+  // const paymentIntent = await stripe.paymentIntents.create({
+  //   amount: totalAmount*100, // for decimal compensation
+  //   currency: "inr",
+  //   automatic_payment_methods: {
+  //     enabled: true,
+  //   },
+  // });
 
-  res.send({
-    clientSecret: paymentIntent.client_secret,
-  });
+  // res.send({
+  //   clientSecret: paymentIntent.client_secret,
+  // });
 })
 
+server.get("/", (req, res) => {
+  res.send("Hello World");
+});
 
 
 main().catch((err) => console.log(err));
