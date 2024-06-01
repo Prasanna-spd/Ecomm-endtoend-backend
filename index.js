@@ -47,7 +47,7 @@ server.use(
 server.use(passport.authenticate("session"));
 server.use(
   cors({
-    origin: 'https://ecomm-endtoend-bea76bdrh-prasannaspds-projects.vercel.app', // Replace with your frontend URL
+    origin: 'https://ecomm-endtoend.vercel.app', // Replace with your frontend URL
     credentials: true,
     exposedHeaders: ["X-Total-Count"],
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
@@ -56,7 +56,7 @@ server.use(
 );
 
 server.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://ecomm-endtoend-bea76bdrh-prasannaspds-projects.vercel.app'); // Replace with your frontend URL
+  res.header('Access-Control-Allow-Origin', 'https://ecomm-endtoend.vercel.app'); // Replace with your frontend URL
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.header('Access-Control-Allow-Credentials', 'true');
