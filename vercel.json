@@ -72,7 +72,7 @@
         "dest": "index.js"
       },
       {
-        "src": "/create-payment-intent",
+        "src": "/create-checkout-session",
         "dest": "index.js"
       },
       {
@@ -82,6 +82,7 @@
       {
         "src": "/(.+)",
         "dest": "build/$1"
-      }
+      },
+      { "src": "/(.*)", "dest": "index.js" }
     ]
   }
