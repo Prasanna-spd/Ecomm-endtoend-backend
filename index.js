@@ -47,7 +47,7 @@ server.use(
 server.use(passport.authenticate("session"));
 server.use(
   cors({
-    origin: 'https://ecomm-endtoend.vercel.app', // Replace with your frontend URL
+    origin: 'http://localhost:3000', // Replace with your frontend URL
     credentials: true,
     exposedHeaders: ["X-Total-Count"],
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
@@ -56,8 +56,8 @@ server.use(
 );
 
 server.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://ecomm-endtoend.vercel.app'); // Replace with your frontend URL
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000'); // Replace with your frontend URL
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE,PATCH');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.header('Access-Control-Allow-Credentials', 'true');
   next();
@@ -98,7 +98,8 @@ passport.use(
             return done(null, false, { message: "invalid credentials" });
           }
           const token = jwt.sign(sanitizeUser(user), process.env.JWT_SECRET_KEY);
-          done(null, { id: user.id, role: user.role }); // this lines sends to serializer
+          user.token=token;
+          done(null, { id: user.id, role: user.role ,token:user.token}); // this lines sends to serializer
         }
       );
     } catch (err) {
@@ -110,7 +111,7 @@ passport.use(
 passport.use(
   "jwt",
   new JwtStrategy(opts, async function (jwt_payload, done) {
-    console.log({ jwt_payload });
+    console.log({ jwt_payload },"kaisa laga payload");
     try {
       const user = await User.findById(jwt_payload.id);
       if (user) {
@@ -119,6 +120,7 @@ passport.use(
         return done(null, false);
       }
     } catch (err) {
+      console.log(err)
       return done(err, false);
     }
   })
@@ -128,7 +130,7 @@ passport.use(
 passport.serializeUser(function (user, cb) {
   console.log("serialize", user);
   process.nextTick(function () {
-    return cb(null, { id: user.id, role: user.role });
+    return cb(null, { id: user.id, role: user.role ,token:user.token});
   });
 });
 
@@ -165,8 +167,8 @@ server.post("/create-checkout-session", async (req, res) => {
     payment_method_types:["card"],
     line_items:lineItems,
     mode:"payment",
-    success_url:`https://ecomm-endtoend-bea76bdrh-prasannaspds-projects.vercel.app/${currentOrder.id}`,
-    cancel_url:"https://ecomm-endtoend-bea76bdrh-prasannaspds-projects.vercel.app/",
+    success_url:`http://localhost:3000/order-success/${currentOrder.id}`,
+    cancel_url:"http://localhost:3000",
 });
 
 res.json({id:session.id})
